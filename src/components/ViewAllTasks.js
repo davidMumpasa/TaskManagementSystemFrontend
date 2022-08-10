@@ -3,10 +3,17 @@ import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import {useState} from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import AppBar from '@mui/material/AppBar';
+import IconButton from '@mui/material/IconButton';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import EditIcon from '@mui/icons-material/Edit';
 import Paper from '@mui/material/Paper';
+import {useNavigate } from "react-router-dom";
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
 import axios from "axios";
 import TableBody from '@mui/material/TableBody';
+import DeleteIcon from '@mui/icons-material/Delete';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
@@ -34,22 +41,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function ViewAllTasks() {
 
+    let navigate = useNavigate();
     const fd = new FormData();
 
-    const editTask = (e,taskName) => {
-      fd.append("taskName",taskName);
-      axios.post("http://localhost:8080/home/editTask", fd)
-          .then((result)=>{
-              alert(result.data);
-          })
+    const findTask = (e,taskName) =>{
+
+        fd.append("taskName",taskName);
+        axios.post("http://localhost:8080/home/findTask", fd)
+            .then(()=>{
+                 navigate('/edit')
+            })
     }
 
     const deleteTask = (e,taskName) => {
 
         fd.append("taskName",taskName);
         axios.post("http://localhost:8080/home/delete", fd)
-            .then((result)=>{
-                alert(result.data);
+            .then(( )=>{
+                window.location.reload(false);
             })
     }
 
@@ -73,13 +82,22 @@ export default function ViewAllTasks() {
                 }
             )
     }, [])
-
+    const customColumnStyle = { width: 12 };
 
     return (
-
-
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+         
+        <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+            <Toolbar>
+            <Button color="inherit"onClick={()=>{navigate('/appbar')}}>Home</Button>
+                <Button color="inherit"onClick={()=>{navigate('/signUp')}}>favorite tasks</Button>
+                <Button color="inherit" onClick={()=>{navigate('/createtask')}} >create task</Button>
+                <Button color="inherit" onClick={()=>{navigate('/viewalltasks')} }>View All Tasks</Button>
+            </Toolbar>
+        </AppBar>
+            <h1></h1>
+            <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table" style={customColumnStyle}>
                 <TableHead>
                     <TableRow>
                         <StyledTableCell>Task Name</StyledTableCell>
@@ -101,18 +119,27 @@ export default function ViewAllTasks() {
                             <StyledTableCell align="right">{task.owner}</StyledTableCell>
                             <StyledTableCell align="right">{task.creationDate}</StyledTableCell>
                             <StyledTableCell align="right">
-                                <Button variant="contained" color="success" >Edit</Button>
+                                <IconButton id="btn1" aria-label="edit" onClick={(e) => {findTask(e,task.name)}}>
+                                    <EditIcon />
+                                </IconButton>
                             </StyledTableCell>
                             <StyledTableCell align="right">
-                                <Button variant="contained" color="success" onClick={(e) => {deleteTask(e,task.name)}}>Delete</Button>
+                                <IconButton aria-label="delete" onClick={(e) => {deleteTask(e,task.name)}}>
+                                    <DeleteIcon />
+                                </IconButton>
                             </StyledTableCell>
                             <StyledTableCell align="right">
-                                <Button variant="contained" color="success"  onClick={(e) => {addtoFavorite(e,task.name)}}>favorite</Button>
+                                <IconButton aria-label="favorite" onClick={(e) => {addtoFavorite(e,task.name)}}>
+                                    <FavoriteIcon/>
+                                </IconButton>
                             </StyledTableCell>
                         </StyledTableRow>
                     ))}
                 </TableBody>
             </Table>
         </TableContainer>
+         
+    </Box>
+         
     );
 }

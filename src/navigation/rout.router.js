@@ -1,25 +1,21 @@
-import React, { Component }  from 'react';
-import Flight from "../components/Flight";
+import React  from 'react';
+import CreateTask from "../components/CreateTask";
 import Login from "../components/Login";
-import Home from "../components/Home";
 import SignUp from "../components/SignUp";
 import Appbar from "../components/Appbar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function routRouter() {
     return (
-
-        <Router>
-
+        <BrowserRouter>
             <Routes>
                 <Route index element={<Login/>}/>
-                <Route Path="/appbar" element={<Appbar/>}/>
-                <Route path="/flight" element={<Flight/>}/>
-                <Route Path="/signUp" element={<SignUp/>}/>
-                <Route Path="/home" element={<Home/>}/>
+                <Route path='/appbar' element={<Appbar/>}/>
+                <Route path='/createtask' element={<CreateTask/>}/>
+                <Route path='/signUp' element={<SignUp/>}/>
+                <Route path='*' element={<SignUp/>}/>
             </Routes>
-        </Router>
-
+        </BrowserRouter>
     );
 }
 export default routRouter();

@@ -5,8 +5,14 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import axios from "axios";
+import Link from '@mui/material/Link';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import { createTheme,ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-// import {useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
+
+const theme = createTheme();
 
 export default function Flight() {
     //const paperStyle={padding:'50px 20px', width:600,margin:"20px auto"}
@@ -14,7 +20,7 @@ export default function Flight() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    // let navigate = useNavigate();
+    let navigate = useNavigate();
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -22,48 +28,112 @@ export default function Flight() {
 
         axios.post("http://localhost:8080/home/signUp", user)
             .then((result)=>{
-                // navigate("/")
+                navigate("/")
                 alert(result.data);
             })
     }
 
     return (
-        <div style={{width: '100%'}}>
-            <Box
-                component="form"
-                sx={{
-                    '& > :not(style)': {m: 1, width: '25ch'},
-                }}
-                noValidate
-                autoComplete="off"
-            >
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Paper elevation={10} style={{padding: '20px 20px', width: 600, margin: "20px auto" }}>
+                 
+                    <Box
+                        sx={{
+                            marginTop: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
 
+                        <Typography component="h1" variant="h9" >
+                            Sign Up
+                        </Typography>
 
-                <Paper elevation={3} style={{padding: '50px 20px', width: 600, margin: "20px auto"}}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="name"
+                                name="username"
+                                autoComplete="username"
+                                autoFocus
+                                value={email}
+                                onChange={(e)=> setUserName(e.target.value)}
+                            />
 
-                    <Typography component="h1" variant="h9" >
-                        SignUp
-                    </Typography>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="Surname"
+                                label="Surname"
+                                name="Surname"
+                                autoComplete="Surname"
+                                autoFocus
+                                // value={Adress}
+                                // onChange={(e)=> setUserName(e.target.value)}
+                            />
 
-                    <from noValidate autoConplete="off">
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="Adress"
+                                label="Adress"
+                                name="Adress"
+                                autoComplete="Adress"
+                                autoFocus
+                                // value={Adress}
+                                // onChange={(e)=> setUserName(e.target.value)}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                                value={email}
+                                onChange={(e)=> setEmail(e.target.value)}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                           
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 2, mb: 1 }}
+                                onClick={handleClick}
+                            >
+                                Sign In
+                            </Button>
 
-                        <TextField margin="normal" id="outlined-basic" label="Email" variant="outlined" fullWidth
-                                   value={email} onChange={(e) => setEmail(e.target.value)}/><br/>
-                        <TextField margin="normal" id="outlined-basic" label="Username"  variant="outlined" fullWidth
-                                   value={username} onChange={(e) => setUserName(e.target.value)}/><br/>
-                        <TextField margin="normal" id="outlined-basic" label="Password"  variant="outlined" fullWidth
-                                   value={password} onChange={(e) => setPassword(e.target.value)}/><br/>
+                             
+                            <Link href="/" variant="body2">
+                                {"Go back to Login"}
+                            </Link>
+                           
 
-                        <Button variant="contained" color="success" onClick={handleClick} fullWidth>
-                            Submit
-                        </Button>
-
-                    </from>
+                    </Box>
                 </Paper>
-
-            </Box>
-
-        </div>
-
+            </Container>
+        </ThemeProvider>
     );
 }
