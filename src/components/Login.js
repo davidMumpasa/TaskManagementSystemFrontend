@@ -26,10 +26,14 @@ export default function Login() {
         fd.append("email",email);
         fd.append("password",password);
         axios.post("http://localhost:8080/home/Login",fd)
-            .then(( ) => {
-                navigate('/appbar');
-                    
-
+            .then((result) => {
+                if(result.data == "2"){
+                    alert("Wrong Password. Please retry");
+                } else if(result.data == "3"){
+                    alert("Could not find user with email: "+ email);
+                } else{
+                    navigate('/appbar');
+                }
             })
     }
 
@@ -82,7 +86,7 @@ export default function Login() {
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
-                                onClick={ HandleClick}
+                                onClick={(e)=> HandleClick(e)}
                             >
                                 Sign In
                             </Button>

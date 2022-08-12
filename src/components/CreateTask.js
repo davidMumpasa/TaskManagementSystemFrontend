@@ -20,8 +20,8 @@ export default function CreateTask() {
     const handleClick = (e) => {
         e.preventDefault()
         const task = {name , description, owner}
-
-        axios.post("http://localhost:8080/home/createTask", task)
+       
+        axios.post("http://localhost:8080/home/createTask",task)
             .then((result)=>{
                alert(result.data)
             })

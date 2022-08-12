@@ -48,7 +48,9 @@ export default function ViewAllTasks() {
 
         fd.append("taskName",taskName);
         axios.post("http://localhost:8080/home/findTask", fd)
-            .then(()=>{
+            .then((result)=>{
+                 
+                sessionStorage.setItem("task",JSON.stringify(result.data));
                  navigate('/edit')
             })
     }

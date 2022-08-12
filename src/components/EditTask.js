@@ -39,32 +39,31 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function EditTask() {
-  const [setName] = useState("");
+  const [name,setName] = useState("");
   const [description, setDescription] = useState("");
   const [owner, setowner] = useState("");
-  const [setId] = useState("");
+  const [id, setId] = useState("");
   let navigate = useNavigate();
 
-  const editTask = (e, taskName) => {
-    const fd = new FormData();
-    fd.append("taskName", taskName);
-    fd.append("description", description);
-    fd.append("owner", owner);
+  const editTask = () => {
+    //const fd = new FormData();
+    const task = {id,name,description,owner};
+    // fd.append("taskName", taskName);
+    // fd.append("name", name);
+    // fd.append("id", id);
+    // fd.append("description", description);
+    // fd.append("owner", owner);
 
-    axios.post("http://localhost:8080/home/editTask", fd).then((result) => {
-      alert(result.data);
+    axios.post("http://localhost:8080/home/editTask", task)
+    .then(() => {
+      navigate('/viewalltasks')
+      //alert(result.data);
     });
   };
 
-  const [task, setTask] = useState([]);
-
-  React.useEffect(() => {
-    fetch("http://localhost:8080/home/getTask")
-      .then((res) => res.json())
-      .then((result) => {
-        setTask(result.data);
-      });
-  }, []);
+  var task = function(){};
+  task =  sessionStorage.getItem("task");
+  task = JSON.parse(task);
 
   const customColumnStyle = { width: 12 };
   return (
@@ -127,37 +126,37 @@ export default function EditTask() {
               <StyledTableRow key={task.id}>
                 <StyledTableCell>
                   <TextField
-                    value={task.id}
+                    defaultValue={task.id}
                     onChange={(e) => setId(e.target.value)}
                   />
                 </StyledTableCell>
 
                 <StyledTableCell align="right">
                   <TextField
-                    value={task.name}
+                    defaultValue={task.name}
                     onChange={(e) => setName(e.target.value)}
                     component="th"
                   />
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   <TextField
-                    value={task.description}
+                    defaultValue={task.description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   <TextField
-                    value={task.owner}
+                  defaultValue={task.owner}
                     onChange={(e) => setowner(e.target.value)}
                   />
-                </StyledTableCell>
+                </StyledTableCell> 
 
                 <StyledTableCell align="right">
                   <IconButton
                     aria-label="edit"
                     label="edit"
-                    onClick={(e) => {
-                      editTask(e, task.name);
+                    onClick={() => {
+                      editTask();
                     }}
                   >
                     <EditIcon />
@@ -168,6 +167,9 @@ export default function EditTask() {
           </TableBody>
         </Table>
       </TableContainer>
+       
     </Box>
+     
+     
   );
 }
