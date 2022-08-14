@@ -5,12 +5,16 @@ import {useState} from 'react';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
 import Paper from '@mui/material/Paper';
 import {useNavigate } from "react-router-dom";
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import TableBody from '@mui/material/TableBody';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -41,25 +45,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function FavoriteTasks() {
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
     let navigate = useNavigate();
     const fd = new FormData();
 
-    const findTask = (e,taskName) =>{
 
-        fd.append("taskName",taskName);
-        axios.post("http://localhost:8080/home/findTask", fd)
-            .then((result)=>{
-                 
-                sessionStorage.setItem("task",JSON.stringify(result.data));
-                
-                 navigate('/edit')
-            })
-    }
+    const deleteTask = (e,id) => {
 
-    const deleteTask = (e,taskName) => {
-
-        fd.append("taskName",taskName);
-        axios.post("http://localhost:8080/home/delete", fd)
+        fd.append("taskName",id);
+        axios.post(`http://localhost:8080/home/deleteFavoriteTask/${id}`)
             .then(( )=>{
                 window.location.reload(false);
             })
@@ -74,7 +77,6 @@ export default function FavoriteTasks() {
         fetch("http://localhost:8080/home/getAllFavoritesTasks")
             .then(res => res.json())
             .then((result) => {
-                alert(favoritTasks.favoriteTask.task.name)
                 setFavoritTasks(result);
                 }
             )
@@ -89,24 +91,30 @@ export default function FavoriteTasks() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             News
           </Typography>
+          <Typography variant="h5" align="center"   component="div" sx={{ flexGrow: 1 }} >
+             Favorite Tasks
+          </Typography>
             <Button color="inherit"onClick={()=>{navigate('/appbar')}}>Home</Button>
                 <Button color="inherit" onClick={()=>{navigate('/createtask')}} >create task</Button>
                 <Button color="inherit" onClick={()=>{navigate('/viewalltasks')} }>View All Tasks</Button>
             </Toolbar>
         </AppBar>
-            <h1></h1>
-            <Paper elevation={20} style={{padding: '30px 20px', width: 'auto', margin: "20px auto" }}>
+
+         
+
+            <Paper elevation={20} style={{padding: '30px 20px', width: 'auto', margin: "50px 20px" }}>
+
             <TableContainer component={Paper}>
             <Table   aria-label="customized table"  >
                 <TableHead>
                     <TableRow>
+                        <StyledTableCell>Task Id</StyledTableCell>
                         <StyledTableCell>Task Name</StyledTableCell>
                         <StyledTableCell align="right">Task Description</StyledTableCell>
                         <StyledTableCell align="right">Owner</StyledTableCell>
                         <StyledTableCell align="right">Creation Date</StyledTableCell>
                         <StyledTableCell align="right"> </StyledTableCell>
-                        <StyledTableCell align="right"> </StyledTableCell>
-                        <StyledTableCell align="right"> </StyledTableCell>
+                       
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -115,20 +123,43 @@ export default function FavoriteTasks() {
                             <StyledTableCell component="th" scope="row">
                             {favoriteTask.id}
                             </StyledTableCell>
+                            <StyledTableCell align="right">{favoriteTask.task.name}</StyledTableCell>
                             <StyledTableCell align="right">{favoriteTask.task.description}</StyledTableCell>
                             <StyledTableCell align="right">{favoriteTask.task.owner}</StyledTableCell>
                             <StyledTableCell align="right">{favoriteTask.task.creationDate}</StyledTableCell>
+                             
                             <StyledTableCell align="right">
-                                <IconButton id="btn1" aria-label="edit" onClick={(e) => {findTask(e,favoriteTask.name)}}>
-                                    <EditIcon />
-                                </IconButton>
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                                <IconButton aria-label="delete" onClick={(e) => {deleteTask(e,favoriteTask.name)}}>
+                                <IconButton aria-label="delete" onClick={(e) => {handleClickOpen(e)}}>
                                     <DeleteIcon />
                                 </IconButton>
                             </StyledTableCell>
                           
+                            <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"Confirmation"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to remove this from your favorite tasks?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button
+                        onClick={(e) => {deleteTask(e,favoriteTask.id)}}
+                        autoFocus
+                      >
+                        Delete
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+
+
                         </StyledTableRow>
                     ))}
                 </TableBody>

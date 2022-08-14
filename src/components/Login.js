@@ -46,7 +46,7 @@ export default function Login() {
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
-                <Paper elevation={10} style={{padding: '30px 20px', width: 600, margin: "20px auto" }}>
+                <Paper elevation={10} style={{padding: '30px 20px', width: 600,  margin: "80px -60px" }}>
                     <Box
                         sx={{
                             marginTop: 8,

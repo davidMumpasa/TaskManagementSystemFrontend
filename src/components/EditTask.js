@@ -67,7 +67,7 @@ export default function EditTask() {
   task = sessionStorage.getItem("task");
   task = JSON.parse(task);
   console.log({ task, id });
-  const customColumnStyle = { width: 12 };
+   
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -110,13 +110,11 @@ export default function EditTask() {
         </Toolbar>
       </AppBar>
       <h1></h1>
-      <Paper elevation={20} style={{padding: '30px 20px', width: 'auto', margin: "20px auto" }}>
+      <Paper elevation={20} style={{padding: '30px 20px', width: 'auto', margin: "50px 20px" }}>
 
-      <TableContainer>
+      <TableContainer component={Paper}>
         <Table
-          sx={{ minWidth: 1300 }}
           aria-label="customized table"
-          style={customColumnStyle}
         >
           <TableHead>
             <TableRow>
@@ -129,36 +127,39 @@ export default function EditTask() {
           </TableHead>
           <TableBody>
             <StyledTableRow key={task.id}>
-              <StyledTableCell>
+              <StyledTableCell align="center">
+                {task.id}<br/>
                 <Input
-                  defaultValue={id.length === 0 ? task.id : id}
+                  value={id}
                   onChange={(e) => {
                     setId(e.target.value);
                   }}
                 />
               </StyledTableCell>
 
-              <StyledTableCell align="right">
-                <Input
-                  defaultValue={name.length === 0 ? task.name : name}
-                  onChange={(e) => setName(e.target.value)}
-                  component="th"
-                />
+              <StyledTableCell align="center">
+              {task.name}<br/> 
+              <Input
+                value={name} 
+                onChange={(e) => setName(e.target.value)}
+                /> 
               </StyledTableCell>
-              <StyledTableCell align="right">
+              <StyledTableCell align="center">
+                {task.description}<br/>
                 <Input
-                defaultValue={description.length === 0 ?task.description : description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                /> 
               </StyledTableCell>
-              <StyledTableCell align="right">
+              <StyledTableCell align="center">
+                {task.owner}<br/>
                 <Input
-                defaultValue={owner.length === 0 ?task.owner : owner}
+                value={owner}
                   onChange={(e) => setowner(e.target.value)}
-                />
+                /> 
               </StyledTableCell>
 
-              <StyledTableCell align="right">
+              <StyledTableCell align="center">
                 <IconButton
                   aria-label="edit"
                   label="edit"
@@ -168,6 +169,7 @@ export default function EditTask() {
                 >
                   <EditIcon />
                 </IconButton>
+
               </StyledTableCell>
             </StyledTableRow>
           </TableBody>

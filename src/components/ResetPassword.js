@@ -17,6 +17,7 @@ const theme = createTheme();
 export default function ResetPassword() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [retypedPassword, setRetypedPassword] = useState("");
   let navigate = useNavigate();
 
   const HandleClick = () => {
@@ -24,15 +25,16 @@ export default function ResetPassword() {
 
     fd.append("email", email);
     fd.append("password", password);
-    axios.post("http://localhost:8080/home/Login", fd).then((result) => {
+    fd.append("retypedPassword", retypedPassword);
+    axios.post("http://localhost:8080/home/resetPassword", fd)
+    .then((result) => {
       if (result.data == "2") {
-        alert("Wrong Password. Please retry");
+        alert("retyped Password is incorrect. Please retry");
       } else if (result.data == "3") {
         alert("Could not find user with email: " + email);
       } else {
-        sessionStorage.setItem("logedInUser", JSON.stringify(result.data));
-
-        navigate("/appbar");
+        alert(result.data)
+        navigate("/");
       }
     });
   };
@@ -43,7 +45,7 @@ export default function ResetPassword() {
         <CssBaseline />
         <Paper
           elevation={10}
-          style={{ padding: "30px 20px", width: 600, margin: "20px auto" }}
+          style={{ padding: "30px 20px", width: 600, margin: "80px -60px"}}
         >
           <Box
             sx={{
@@ -90,8 +92,8 @@ export default function ResetPassword() {
               type="password"
               id="password"
               autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={retypedPassword}
+              onChange={(e) => setRetypedPassword(e.target.value)}
             />
 
             <Button

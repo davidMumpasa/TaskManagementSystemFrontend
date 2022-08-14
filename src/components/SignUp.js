@@ -50,7 +50,7 @@ export default function Flight() {
            
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
-                <Paper elevation={10} style={{padding: '20px 20px', width: 600, margin: "20px auto" }}>
+                <Paper elevation={10} style={{padding: '20px 20px', width: 600, margin: "20px -60px"}}>
                  
                     <Box
                         sx={{
