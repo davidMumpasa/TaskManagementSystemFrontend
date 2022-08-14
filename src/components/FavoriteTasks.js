@@ -5,13 +5,12 @@ import {useState} from 'react';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
 import Paper from '@mui/material/Paper';
 import {useNavigate } from "react-router-dom";
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import axios from "axios";
 import TableBody from '@mui/material/TableBody';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -40,7 +39,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export default function ViewAllTasks() {
+export default function FavoriteTasks() {
 
     let navigate = useNavigate();
     const fd = new FormData();
@@ -66,31 +65,17 @@ export default function ViewAllTasks() {
             })
     }
 
-    const addtoFavorite = (e,taskName) => {
+ 
 
-        fd.append("taskName",taskName)
+    const [favoritTasks, setFavoritTasks] = useState([]);
 
-        axios.post("http://localhost:8080/home/favoriteTask",fd)
-            .then((favoriteResult)=>{
-
-                if(favoriteResult.data =="1"){
-                    alert("Task has been successfully added has favorite");
-                    window.location.reload(false);
-                } else {
-                    window.location.reload(false);
-                    alert(favoriteResult.data);
-                }
-                 
-            })
-    }
-
-    const [tasks, setTasks] = useState([])
 
     React.useEffect(() => {
-        fetch("http://localhost:8080/home/getAllTasks")
+        fetch("http://localhost:8080/home/getAllFavoritesTasks")
             .then(res => res.json())
             .then((result) => {
-                    setTasks(result);
+                alert(favoritTasks.favoriteTask.task.name)
+                setFavoritTasks(result);
                 }
             )
     }, [])
@@ -105,9 +90,8 @@ export default function ViewAllTasks() {
             News
           </Typography>
             <Button color="inherit"onClick={()=>{navigate('/appbar')}}>Home</Button>
-                <Button color="inherit"onClick={()=>{navigate('/FavoriteTasks')}}>favorite tasks</Button>
                 <Button color="inherit" onClick={()=>{navigate('/createtask')}} >create task</Button>
-               
+                <Button color="inherit" onClick={()=>{navigate('/viewalltasks')} }>View All Tasks</Button>
             </Toolbar>
         </AppBar>
             <h1></h1>
@@ -126,29 +110,25 @@ export default function ViewAllTasks() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {tasks.map((task) => (
-                        <StyledTableRow key={task.id}>
+                    {favoritTasks.map((favoriteTask) => (
+                        <StyledTableRow key={favoriteTask.id}>
                             <StyledTableCell component="th" scope="row">
-                                {task.name}
+                            {favoriteTask.id}
                             </StyledTableCell>
-                            <StyledTableCell align="right">{task.description}</StyledTableCell>
-                            <StyledTableCell align="right">{task.owner}</StyledTableCell>
-                            <StyledTableCell align="right">{task.creationDate}</StyledTableCell>
+                            <StyledTableCell align="right">{favoriteTask.task.description}</StyledTableCell>
+                            <StyledTableCell align="right">{favoriteTask.task.owner}</StyledTableCell>
+                            <StyledTableCell align="right">{favoriteTask.task.creationDate}</StyledTableCell>
                             <StyledTableCell align="right">
-                                <IconButton id="btn1" aria-label="edit" onClick={(e) => {findTask(e,task.name)}}>
+                                <IconButton id="btn1" aria-label="edit" onClick={(e) => {findTask(e,favoriteTask.name)}}>
                                     <EditIcon />
                                 </IconButton>
                             </StyledTableCell>
                             <StyledTableCell align="right">
-                                <IconButton aria-label="delete" onClick={(e) => {deleteTask(e,task.name)}}>
+                                <IconButton aria-label="delete" onClick={(e) => {deleteTask(e,favoriteTask.name)}}>
                                     <DeleteIcon />
                                 </IconButton>
                             </StyledTableCell>
-                            <StyledTableCell align="right">
-                                <IconButton aria-label="favorite" onClick={(e) => {addtoFavorite(e,task.name)}}>
-                                    <FavoriteIcon/>
-                                </IconButton>
-                            </StyledTableCell>
+                          
                         </StyledTableRow>
                     ))}
                 </TableBody>

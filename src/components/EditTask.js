@@ -5,18 +5,20 @@ import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
+// import TextField from "@mui/material/TextField";
+import Input from "@mui/material/Input";
+import Typography from '@mui/material/Typography';
 import axios from "axios";
 import Box from "@mui/material/Box";
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import TableRow from "@mui/material/TableRow";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -39,37 +41,40 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function EditTask() {
-  const [name,setName] = useState("");
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [owner, setowner] = useState("");
   const [id, setId] = useState("");
   let navigate = useNavigate();
+  var task = function () {};
 
   const editTask = () => {
-    //const fd = new FormData();
-    const task = {id,name,description,owner};
-    // fd.append("taskName", taskName);
-    // fd.append("name", name);
-    // fd.append("id", id);
-    // fd.append("description", description);
-    // fd.append("owner", owner);
+    const fd = new FormData();
 
-    axios.post("http://localhost:8080/home/editTask", task)
+    fd.append("name", task.name);
+    fd.append("taskname", name);
+    fd.append("id", id);
+    fd.append("description", description);
+    fd.append("owner", owner);
+
+    axios.post("http://localhost:8080/home/editTask", fd)
     .then(() => {
-      navigate('/viewalltasks')
+      navigate("/viewalltasks");
       //alert(result.data);
     });
   };
 
-  var task = function(){};
-  task =  sessionStorage.getItem("task");
+  task = sessionStorage.getItem("task");
   task = JSON.parse(task);
-
+  console.log({ task, id });
   const customColumnStyle = { width: 12 };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            News
+          </Typography>
           <Button
             color="inherit"
             onClick={() => {
@@ -81,7 +86,7 @@ export default function EditTask() {
           <Button
             color="inherit"
             onClick={() => {
-              navigate("/signUp");
+              navigate("/FavoriteTasks");
             }}
           >
             favorite tasks
@@ -105,10 +110,11 @@ export default function EditTask() {
         </Toolbar>
       </AppBar>
       <h1></h1>
+      <Paper elevation={20} style={{padding: '30px 20px', width: 'auto', margin: "20px auto" }}>
 
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table
-          sx={{ minWidth: 700 }}
+          sx={{ minWidth: 1300 }}
           aria-label="customized table"
           style={customColumnStyle}
         >
@@ -122,54 +128,54 @@ export default function EditTask() {
             </TableRow>
           </TableHead>
           <TableBody>
-            
-              <StyledTableRow key={task.id}>
-                <StyledTableCell>
-                  <TextField
-                    defaultValue={task.id}
-                    onChange={(e) => setId(e.target.value)}
-                  />
-                </StyledTableCell>
+            <StyledTableRow key={task.id}>
+              <StyledTableCell>
+                <Input
+                  defaultValue={id.length === 0 ? task.id : id}
+                  onChange={(e) => {
+                    setId(e.target.value);
+                  }}
+                />
+              </StyledTableCell>
 
-                <StyledTableCell align="right">
-                  <TextField
-                    defaultValue={task.name}
-                    onChange={(e) => setName(e.target.value)}
-                    component="th"
-                  />
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <TextField
-                    defaultValue={task.description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <TextField
-                  defaultValue={task.owner}
-                    onChange={(e) => setowner(e.target.value)}
-                  />
-                </StyledTableCell> 
+              <StyledTableCell align="right">
+                <Input
+                  defaultValue={name.length === 0 ? task.name : name}
+                  onChange={(e) => setName(e.target.value)}
+                  component="th"
+                />
+              </StyledTableCell>
+              <StyledTableCell align="right">
+                <Input
+                defaultValue={description.length === 0 ?task.description : description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </StyledTableCell>
+              <StyledTableCell align="right">
+                <Input
+                defaultValue={owner.length === 0 ?task.owner : owner}
+                  onChange={(e) => setowner(e.target.value)}
+                />
+              </StyledTableCell>
 
-                <StyledTableCell align="right">
-                  <IconButton
-                    aria-label="edit"
-                    label="edit"
-                    onClick={() => {
-                      editTask();
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </StyledTableCell>
-              </StyledTableRow>
-       
+              <StyledTableCell align="right">
+                <IconButton
+                  aria-label="edit"
+                  label="edit"
+                  onClick={() => {
+                    editTask();
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </StyledTableCell>
+            </StyledTableRow>
           </TableBody>
         </Table>
       </TableContainer>
+
+      </Paper>
        
     </Box>
-     
-     
   );
 }

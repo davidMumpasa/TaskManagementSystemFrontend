@@ -10,31 +10,44 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import { createTheme,ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+ 
 import {useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function Flight() {
     //const paperStyle={padding:'50px 20px', width:600,margin:"20px auto"}
-    const [username, setUserName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [username, setUserName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [surname, setSurname] = useState('');
+    const [address, setAddress] = useState('');
+    
 
     let navigate = useNavigate();
 
     const handleClick = (e) => {
         e.preventDefault()
-        const user = {email,username,password}
+        const user = {username,surname,email,password,address}
 
         axios.post("http://localhost:8080/home/signUp", user)
             .then((result)=>{
-                navigate("/")
-                alert(result.data);
+                 
+                if(result.data == "1"){
+                    alert("User has been successfuly created");
+                    navigate("/")
+                } else{
+                    alert(result.data);
+                }
+                 
+                 
             })
     }
 
     return (
+         
         <ThemeProvider theme={theme}>
+           
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Paper elevation={10} style={{padding: '20px 20px', width: 600, margin: "20px auto" }}>
@@ -61,7 +74,7 @@ export default function Flight() {
                                 name="username"
                                 autoComplete="username"
                                 autoFocus
-                                value={email}
+                                value={username}
                                 onChange={(e)=> setUserName(e.target.value)}
                             />
 
@@ -74,8 +87,8 @@ export default function Flight() {
                                 name="Surname"
                                 autoComplete="Surname"
                                 autoFocus
-                                // value={Adress}
-                                // onChange={(e)=> setUserName(e.target.value)}
+                                value={surname}
+                                onChange={(e)=> setSurname(e.target.value)}
                             />
 
                             <TextField
@@ -87,8 +100,8 @@ export default function Flight() {
                                 name="Adress"
                                 autoComplete="Adress"
                                 autoFocus
-                                // value={Adress}
-                                // onChange={(e)=> setUserName(e.target.value)}
+                                value={address}
+                                onChange={(e)=> setAddress(e.target.value)}
                             />
                             <TextField
                                 margin="normal"
@@ -114,7 +127,6 @@ export default function Flight() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-                           
                             <Button
                                 type="submit"
                                 fullWidth
@@ -122,7 +134,7 @@ export default function Flight() {
                                 sx={{ mt: 2, mb: 1 }}
                                 onClick={handleClick}
                             >
-                                Sign In
+                                Sign Up
                             </Button>
 
                              

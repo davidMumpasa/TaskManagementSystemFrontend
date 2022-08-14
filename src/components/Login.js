@@ -32,7 +32,11 @@ export default function Login() {
                 } else if(result.data == "3"){
                     alert("Could not find user with email: "+ email);
                 } else{
+                    
+                    sessionStorage.setItem("logedInUser",JSON.stringify(result.data));
+                     
                     navigate('/appbar');
+                     
                 }
             })
     }
@@ -88,14 +92,14 @@ export default function Login() {
                                 sx={{ mt: 3, mb: 2 }}
                                 onClick={(e)=> HandleClick(e)}
                             >
-                                Sign In
+                                Login
                             </Button>
 
 
 
                             <Grid container>
                                 <Grid item xs>
-                                    <Link href="#" variant="body2">
+                                    <Link href="/ResetPassword" variant="body2">
                                         Forgot password?
                                     </Link>
                                 </Grid>
